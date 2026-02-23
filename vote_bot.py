@@ -172,20 +172,25 @@ async def result_category(ctx):
     # 全体集計
     total = {}
     for user in votes:
-        for key in votes[user]:
-            total[key] = total.get(key, 0) + votes[user][key]
+        for key, count in votes[user].items():
+            total[key] = total.get(key, 0) + count
 
     # カテゴリー別に分解
     category_totals = {}
 
     for key, count in total.items():
-        category, option = key.split(":", 1)
+        if ":" in key:
+            category, option = key.split(":", 1)
+        else:
+            category = "未分類"
+            option = key
 
         if category not in category_totals:
             category_totals[category] = {}
 
         category_totals[category][option] = count
 
+    # メッセージ作成
     message = "🏆 カテゴリー別結果 🏆\n\n"
 
     for category in category_totals:
